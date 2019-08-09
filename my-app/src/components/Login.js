@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { withFormik, Form, Field } from 'formik';
-import * as Yup from 'yup'
+import axios from 'axios';
+import * as Yup from 'yup';
 
 function Login({ values, errors, touched, handleSubmit, status }) {
   const [loginData, setLoginData] = useState([])
@@ -22,7 +23,7 @@ function Login({ values, errors, touched, handleSubmit, status }) {
         <Field type="password" name="password" placeholder="Password" />
         {touched.password && errors.password && ( <p>{errors.password}</p> )}
       </div>
-      <button type="submit">Login</button>
+      <button data-testid="login" type="submit">Login</button>
 
       {loginData.map(log => (
         <p key={log.id}>{log.username} | {log.password}</p>
@@ -45,8 +46,13 @@ const FormikLogin = withFormik({
       .min(6, "password must have at least 6 characters.")
   }),
 
-  handleSubmit(values) {
-    console.log(values);
+  handleSubmit(values, { setStatus }) {
+    axios
+      .post('https://reqres.in/api/users', values)
+      .then(res => {
+        setStatus(res.data);
+      })
+      .catch(err => console.log(err.response))
   }
 })(Login);
 
