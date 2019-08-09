@@ -14,7 +14,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h2>Login</h2>
+          <h1>Login</h1>
           <FormikLogin />
         </header>
       </div>

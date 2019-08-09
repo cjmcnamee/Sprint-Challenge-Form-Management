@@ -9,7 +9,7 @@ function Login({ values, errors, touched, handleSubmit, status }) {
 
   useEffect(() => {
     if (status) {
-      setLoginData([...loginData, status]);
+      setLoginData([...status]);
     }
   }, [status]);
 
@@ -26,7 +26,7 @@ function Login({ values, errors, touched, handleSubmit, status }) {
       <button data-testid="login" type="submit">Login</button>
 
       {loginData.map(log => (
-        <p key={log.id}>{log.username} | {log.password}</p>
+        <p key={log.id}>{log.username}</p>
       ))}
     </Form>
   );
@@ -36,7 +36,7 @@ const FormikLogin = withFormik({
   mapPropsToValues({ username, password }) {
     return {
       username: username || "",
-      password: password || "",
+      password: password || ""
     };
   },
 
@@ -48,7 +48,13 @@ const FormikLogin = withFormik({
 
   handleSubmit(values, { setStatus }) {
     axios
-      .post('https://reqres.in/api/users', values)
+      .post('http://localhost:5000/api/register', values)
+      .then(res => {
+        setStatus(res.data);
+      })
+      .catch(err => console.log(err.response))
+    axios
+      .get('http://localhost:5000/api/restricted/users')
       .then(res => {
         setStatus(res.data);
       })
